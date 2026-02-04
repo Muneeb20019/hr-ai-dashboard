@@ -7,7 +7,7 @@ import {
   Badge, Metric, Text, Flex, Grid, ProgressBar, AreaChart, Button,
   Dialog, DialogPanel, DatePicker
 } from "@tremor/react";
-import { Users, CheckCircle, Mail, Phone, ArrowRight, X, Zap } from "lucide-react";
+import { Users, BarChart3, CheckCircle, Mail, Phone, ArrowRight, X, Zap } from "lucide-react";
 
 const SUPABASE_URL = 'https://ugqqwlfrvczogkkxxoct.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVncXF3bGZydmN6b2dra3h4b2N0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxMDc5MzEsImV4cCI6MjA4NTY4MzkzMX0.BP_75CH7CII90lES8UP7reB70SgAGMEb1OFzFdKnJcg';
@@ -53,12 +53,11 @@ export default function CleanPowerDashboard() {
             </div>
         </div>
 
-        {/* UPDATED: 2 COLUMN METRIC GRID */}
+        {/* 2-COLUMN METRIC GRID - "System Secure" card removed */}
         <Grid numItemsLg={2} className="gap-10 mb-16">
             <Card className="bg-slate-900/40 border-slate-800/60 ring-0 backdrop-blur-xl p-10 rounded-[3rem]">
                 <Text className="text-slate-500 font-black uppercase text-sm tracking-[0.3em] mb-2">Global Pipeline Volume</Text>
                 <Metric className="text-white font-black text-8xl">{allCandidates.length}</Metric>
-                {/* Fixed Graph: Only shows if there are at least 2 candidates to prevent messy labels */}
                 {allCandidates.length > 1 ? (
                     <AreaChart 
                         className="h-32 mt-10 -mx-10 -mb-10" 
@@ -75,7 +74,7 @@ export default function CleanPowerDashboard() {
                 )}
             </Card>
 
-            <Card className="bg-gradient-to-br from-indigo-900/30 to-slate-900 border-indigo-500/20 ring-0 flex flex-col justify-center items-center py-10 rounded-[3rem] shadow-[0_0_50px_rgba(79,70,229,0.1)]">
+            <Card className="bg-gradient-to-br from-indigo-900/30 to-slate-900 border-indigo-500/20 ring-0 flex flex-col justify-center items-center py-10 rounded-[3rem] shadow-[0_0_50px_rgba(79,70,229,0.1)] text-center">
                 <Text className="text-indigo-400 font-black uppercase text-sm tracking-[0.3em] mb-4">Today's Intake Feed</Text>
                 <Metric className="text-white font-black text-[12rem] leading-none drop-shadow-[0_0_40px_rgba(99,102,241,0.5)]">
                     {filteredCandidates.length}
@@ -88,7 +87,6 @@ export default function CleanPowerDashboard() {
         <Card className="bg-slate-900/20 border-slate-800/40 ring-0 rounded-[3.5rem] overflow-hidden shadow-3xl">
           <div className="p-12 border-b border-slate-800/60 bg-slate-900/40 flex justify-between items-center">
             <Title className="text-white font-black tracking-tighter uppercase text-4xl italic">Intelligence Stream — {selectedDate?.toLocaleDateString()}</Title>
-            <Badge color="slate" className="font-mono px-6 py-2 rounded-full border-slate-700">{filteredCandidates.length} RECORDS FOUND</Badge>
           </div>
           <Table>
             <TableHead className="bg-slate-900/80">
@@ -102,7 +100,7 @@ export default function CleanPowerDashboard() {
               {filteredCandidates.map((item) => (
                 <TableRow key={item.id} className="hover:bg-indigo-500/5 transition-all duration-300 border-b border-slate-800/30">
                   <TableCell className="p-10">
-                    <Text className="text-white font-black text-4xl tracking-tighter uppercase leading-none mb-3 group-hover:text-indigo-400 transition-colors">{item.name}</Text>
+                    <Text className="text-white font-black text-4xl tracking-tighter uppercase leading-none mb-3">{item.name}</Text>
                     <Text className="text-slate-600 text-xs font-mono uppercase tracking-widest italic">{new Date(item.created_at).toLocaleTimeString()}</Text>
                   </TableCell>
                   <TableCell className="p-10 text-center">
@@ -127,7 +125,7 @@ export default function CleanPowerDashboard() {
         </Card>
       </div>
 
-      {/* --- PROFILE MODAL --- */}
+      {/* MODAL / POPUP */}
       <Dialog open={isOpen} onClose={() => setIsOpen(false)} static={true}>
         <DialogPanel className="bg-[#020617] border border-slate-800 p-0 rounded-[4rem] max-w-5xl shadow-[0_0_150px_rgba(79,70,229,0.3)] overflow-hidden">
           <div className="bg-slate-900/60 p-12 border-b border-slate-800 flex justify-between items-center">
@@ -135,7 +133,7 @@ export default function CleanPowerDashboard() {
                 <Badge color="emerald" className="font-black text-xs px-4 mb-3 rounded-full tracking-widest">VERIFIED NEURAL ID</Badge>
                 <Title className="text-white text-6xl font-black uppercase tracking-tighter leading-none italic">{selectedCandidate?.name}</Title>
             </div>
-            <Button variant="light" onClick={() => setIsOpen(false)} className="bg-slate-800/80 p-5 rounded-full hover:bg-rose-500/30 hover:text-rose-400 transition-all"><X className="w-10 h-10" /></Button>
+            <Button variant="light" onClick={() => setIsOpen(false)} className="bg-slate-800/80 p-5 rounded-full hover:bg-rose-500/20 hover:text-rose-400 transition-all"><X className="w-10 h-10" /></Button>
           </div>
 
           <div className="p-12 space-y-12">
@@ -157,7 +155,7 @@ export default function CleanPowerDashboard() {
                 <div className="space-y-8">
                     <div className="p-10 bg-slate-900/40 rounded-[3rem] border border-slate-800 shadow-inner">
                         <Title className="text-white text-xs uppercase tracking-[0.4em] font-black mb-8 flex items-center italic border-b border-slate-800 pb-4">
-                           <Zap className="w-5 h-5 mr-3 text-indigo-500" /> COMMUNICATION CHANNELS
+                           <Zap className="w-5 h-5 mr-3 text-indigo-500" /> CONTACT CHANNELS
                         </Title>
                         <div className="space-y-8">
                             <div>
@@ -181,7 +179,7 @@ export default function CleanPowerDashboard() {
             </Grid>
 
             <div className="flex gap-8 mt-12 pb-6">
-                <Button className="w-full py-10 rounded-[2.5rem] bg-indigo-600 hover:bg-indigo-500 font-black text-3xl border-none shadow-[0_20px_60px_rgba(79,70,229,0.4)] hover:-translate-y-2 transition-all uppercase tracking-[0.3em] italic">INITIATE INTERVIEW PHASE</Button>
+                <Button className="w-full py-10 rounded-[2.5rem] bg-indigo-600 hover:bg-indigo-500 font-black text-3xl border-none shadow-[0_20px_60px_rgba(79,70,229,0.4)] hover:-translate-y-2 transition-all uppercase tracking-[0.3em] italic">INITIATE INTERVIEW</Button>
                 <Button variant="secondary" className="w-1/4 py-10 rounded-[2.5rem] border-slate-800 text-slate-500 font-black text-sm hover:bg-rose-500/10 hover:text-rose-400 uppercase tracking-widest transition-all">ARCHIVE</Button>
             </div>
           </div>
