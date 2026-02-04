@@ -27,8 +27,12 @@ export default function FinalRecruitAIHub() {
   }, []);
 
   async function fetchData() {
-    const { data } = await supabase.from('candidates').select('*').order('created_at', { ascending: false });
-    if (data) setAllCandidates(data);
+    try {
+        const { data } = await supabase.from('candidates').select('*').order('created_at', { ascending: false });
+        if (data) setAllCandidates(data);
+    } catch (error) {
+        console.error("DB Error:", error);
+    }
   }
 
   const filteredCandidates = allCandidates.filter(c => {
@@ -37,7 +41,7 @@ export default function FinalRecruitAIHub() {
   });
 
   const getSkillChartData = (skillsString: string | undefined) => {
-    if (!skillsString) return [{ name: "No Data", "Match": 0 }];
+    if (!skillsString) return [{ name: "Pending", "Match": 0 }];
     return skillsString.split(',').slice(0, 6).map(s => ({
       name: s.trim().substring(0, 12),
       "Match": Math.floor(Math.random() * 30) + 70,
@@ -47,11 +51,6 @@ export default function FinalRecruitAIHub() {
   if (!mounted) return null;
 
   const hasData = allCandidates.length > 0;
-  const chartData = hasData ? [
-    { name: "Top Talent", count: allCandidates.filter(c => c.score >= 8).length },
-    { name: "Matches", count: allCandidates.filter(c => c.score >= 5 && c.score < 8).length },
-    { name: "Review", count: allCandidates.filter(c => c.score < 5).length },
-  ] : [{ name: "Awaiting Data", count: 1 }];
 
   return (
     <main className="p-4 md:p-10 bg-[#020617] min-h-screen text-slate-100 font-sans selection:bg-indigo-500/30 overflow-x-hidden">
@@ -60,11 +59,7 @@ export default function FinalRecruitAIHub() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-8 border-b border-slate-800 pb-10">
             <div className="space-y-5">
                 <div className="bg-slate-900/90 p-2 rounded-2xl border border-slate-800 shadow-2xl inline-flex items-center gap-2">
-                    <DatePicker 
-                      className="max-w-[160px] bg-slate-900 text-white border-none rounded-xl" 
-                      value={selectedDate} 
-                      onValueChange={setSelectedDate} 
-                    />
+                    <DatePicker className="max-w-[160px] bg-slate-900 text-white border-none rounded-xl" value={selectedDate} onValueChange={setSelectedDate} />
                     <div className="h-6 w-[1px] bg-slate-800 mx-1"></div>
                     <Text className="text-[10px] text-slate-500 px-3 font-mono uppercase tracking-widest font-black">Secure Filter</Text>
                 </div>
@@ -73,10 +68,7 @@ export default function FinalRecruitAIHub() {
                     <Title className="text-6xl font-black text-white tracking-tighter uppercase italic leading-none">RECRUIT.AI <span className="text-indigo-600 font-thin not-italic lowercase">hub</span></Title>
                 </div>
             </div>
-            
-            <Badge color="indigo" className="animate-pulse border-indigo-500/30 px-8 py-3 font-black tracking-[0.2em] text-xs rounded-full bg-indigo-500/10 shadow-[0_0_40px_rgba(99,102,241,0.2)]">
-                AI AGENT LIVE
-            </Badge>
+            <Badge color="indigo" className="animate-pulse border-indigo-500/30 px-8 py-3 font-black tracking-[0.2em] text-xs rounded-full bg-indigo-500/10">AI AGENT LIVE</Badge>
         </div>
 
         <Grid numItemsLg={3} className="gap-8 mb-12">
@@ -85,63 +77,43 @@ export default function FinalRecruitAIHub() {
                 <Metric className="text-white font-black text-5xl">{allCandidates.length}</Metric>
                 <AreaChart className="h-20 mt-4 -mx-6 -mb-6" data={hasData ? allCandidates.map((c, i) => ({ i, s: c.score })) : [{i: 0, s: 0}, {i: 1, s: 0}]} index="i" categories={["s"]} colors={["indigo"]} showXAxis={false} showYAxis={false} showLegend={false} showGridLines={false} />
             </Card>
-
             <Card className="bg-slate-900/40 border-slate-800/60 ring-0 flex flex-col justify-center items-center py-6 text-center">
-                <Text className="text-indigo-400 font-black uppercase text-xs tracking-[0.3em] mb-2">Today's Intake</Text>
+                <Text className="text-indigo-400 font-black uppercase text-xs tracking-[0.3em] mb-2">Today's Active Intake</Text>
                 <Metric className="text-white font-black text-8xl">{filteredCandidates.length}</Metric>
             </Card>
-
             <Card className="bg-gradient-to-br from-indigo-900/40 to-transparent border-indigo-500/20 ring-0 p-8 flex flex-col justify-center">
-                 <Flex>
-                    <Text className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Neural Link Status</Text>
-                    <Badge color="emerald" className="font-black px-4 rounded-full text-[10px]">ENCRYPTED</Badge>
-                 </Flex>
-                 <Text className="text-slate-500 text-[10px] mt-6 font-mono uppercase italic tracking-widest">Waiting for incoming PDF stream from n8n...</Text>
+                 <Flex><Text className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Neural Link Status</Text><Badge color="emerald" className="font-black px-4 rounded-full text-[10px]">ENCRYPTED</Badge></Flex>
+                 <Text className="text-slate-500 text-[10px] mt-6 font-mono uppercase italic tracking-widest">Awaiting new candidates...</Text>
             </Card>
         </Grid>
 
         <Card className="bg-slate-900/20 border-slate-800/40 ring-0 rounded-[2.5rem] overflow-hidden shadow-3xl">
           <div className="p-8 border-b border-slate-800/60 flex justify-between items-center bg-slate-900/40">
             <Title className="text-white font-black tracking-tighter uppercase text-2xl italic">Intelligence Stream — {selectedDate?.toLocaleDateString()}</Title>
-            <Badge color="slate" variant="light" className="font-mono text-[10px] px-4 font-bold">{filteredCandidates.length} ENTRIES</Badge>
           </div>
           <Table>
             <TableHead className="bg-slate-900/80">
               <TableRow>
                 <TableHeaderCell className="text-slate-500 font-black text-[10px] uppercase p-6">Candidate Identity</TableHeaderCell>
                 <TableHeaderCell className="text-slate-500 font-black text-[10px] uppercase p-6">AI Fit Score</TableHeaderCell>
-                <TableHeaderCell className="text-slate-500 font-black text-[10px] uppercase p-6">Core Tech</TableHeaderCell>
                 <TableHeaderCell className="text-slate-500 font-black text-[10px] uppercase p-6 text-right">Action</TableHeaderCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {filteredCandidates.map((item) => (
-                <TableRow key={item.id} className="hover:bg-indigo-500/5 transition-all duration-300 group border-b border-slate-800/30">
+                <TableRow key={item.id} className="hover:bg-indigo-500/5 transition-all group border-b border-slate-800/30">
                   <TableCell className="p-6">
-                    <Text className="text-white font-black text-xl uppercase leading-none mb-1">{item.name}</Text>
+                    <Text className="text-white font-black text-2xl uppercase leading-none mb-1">{item.name}</Text>
                     <Text className="text-slate-600 text-[10px] font-mono italic">{new Date(item.created_at).toLocaleTimeString()}</Text>
                   </TableCell>
                   <TableCell className="p-6">
                     <div className="w-48">
-                        <Text className="text-indigo-400 font-black text-xs mb-1 uppercase tracking-widest italic">{item.score}/10 MATCH</Text>
-                        <ProgressBar value={item.score * 10} color={item.score >= 8 ? "emerald" : "indigo"} className="h-1.5 rounded-full" />
-                    </div>
-                  </TableCell>
-                  <TableCell className="p-6">
-                    <div className="flex flex-wrap gap-2">
-                      {item.skills ? item.skills.split(',').slice(0, 2).map((s: string) => (
-                        <Badge key={s} size="xs" className="bg-slate-800/80 text-slate-400 border-none font-black text-[9px] uppercase px-2 tracking-tighter">
-                          {s.trim()}
-                        </Badge>
-                      )) : <Text>-</Text>}
+                        <Text className="text-indigo-400 font-black text-xs mb-1 italic">{item.score}/10 MATCH</Text>
+                        <ProgressBar value={(item.score || 0) * 10} color={(item.score || 0) >= 8 ? "emerald" : "indigo"} className="h-1.5 rounded-full" />
                     </div>
                   </TableCell>
                   <TableCell className="p-6 text-right">
-                    <Button 
-                        size="xs" variant="secondary" 
-                        className="bg-indigo-600/10 text-indigo-400 border-indigo-500/40 hover:bg-indigo-600 hover:text-white transition-all font-black px-6 py-3 rounded-2xl shadow-xl uppercase tracking-widest text-[10px]"
-                        onClick={() => { setSelectedCandidate(item); setIsOpen(true); }}
-                    >
+                    <Button size="xs" variant="secondary" className="bg-indigo-600/10 text-indigo-400 border-indigo-500/40 hover:bg-indigo-600 hover:text-white transition-all font-black px-6 py-3 rounded-2xl uppercase text-[10px]" onClick={() => { setSelectedCandidate(item); setIsOpen(true); }}>
                         PROFILE <ArrowRight className="ml-2 w-3 h-3" />
                     </Button>
                   </TableCell>
@@ -149,13 +121,7 @@ export default function FinalRecruitAIHub() {
               ))}
             </TableBody>
           </Table>
-          {filteredCandidates.length === 0 && (
-             <div className="text-center py-48 bg-slate-950/40">
-                <Text className="text-slate-700 font-mono italic text-sm tracking-[0.4em] animate-pulse uppercase">
-                   AWAITING EVALUATION DATA PACKETS...
-                </Text>
-             </div>
-          )}
+          {!hasData && <div className="text-center py-48 bg-slate-950/40"><Text className="text-slate-700 font-mono italic text-sm tracking-[0.4em] animate-pulse uppercase">AWAITING DATA STREAM...</Text></div>}
         </Card>
       </div>
 
@@ -163,77 +129,40 @@ export default function FinalRecruitAIHub() {
         <DialogPanel className="bg-[#020617] border border-slate-800 p-0 rounded-[3.5rem] max-w-5xl shadow-[0_0_150px_rgba(79,70,229,0.35)] overflow-hidden">
           <div className="bg-slate-900/60 p-12 border-b border-slate-800 flex justify-between items-center">
             <div>
-                <Flex className="gap-3 mb-3">
-                    <Badge color="emerald" className="px-4 font-black text-[10px] rounded-full">PRE-SCREENED</Badge>
-                    <Badge color="indigo" className="px-4 font-black text-[10px] rounded-full uppercase italic tracking-widest font-mono">Neural ID Sync</Badge>
-                </Flex>
+                <Flex className="gap-3 mb-3"><Badge color="emerald" className="px-4 font-black text-[10px] rounded-full">PRE-SCREENED</Badge></Flex>
                 <Title className="text-white text-6xl font-black uppercase tracking-tighter leading-none italic">{selectedCandidate?.name}</Title>
             </div>
-            <Button variant="light" onClick={() => setIsOpen(false)} className="bg-slate-800/80 p-4 rounded-full hover:bg-rose-500/30 hover:text-rose-400 transition-all"><X className="w-10 h-10" /></Button>
+            <Button variant="light" onClick={() => setIsOpen(false)} className="bg-slate-800/80 p-4 rounded-full hover:bg-rose-500/30 hover:text-rose-400"><X className="w-10 h-10" /></Button>
           </div>
-
           <div className="p-12">
             <Grid numItemsMd={4} className="gap-6 mb-12">
-                <Card className="bg-slate-900/80 border-slate-800/60 p-5 rounded-3xl text-center">
-                    <Text className="text-slate-500 font-black uppercase text-[9px] tracking-widest mb-2">Match Percentage</Text>
-                    <Metric className="text-white font-black text-3xl">{(selectedCandidate?.score || 0) * 10}%</Metric>
-                </Card>
-                <Card className="bg-slate-900/80 border-slate-800/60 p-5 rounded-3xl text-center">
-                    <Text className="text-slate-500 font-black uppercase text-[9px] tracking-widest mb-2 italic">Integrity Check</Text>
-                    <Metric className="text-emerald-500 font-black text-3xl italic">VERIFIED</Metric>
-                </Card>
-                <Card className="bg-slate-900/80 border-slate-800/60 p-5 rounded-3xl text-center">
-                    <Text className="text-slate-500 font-black uppercase text-[9px] tracking-widest mb-2">Evaluation Phase</Text>
-                    <Metric className="text-white font-black text-3xl uppercase tracking-tighter">FINAL</Metric>
-                </Card>
-                <Card className="bg-indigo-600/10 border-indigo-500/30 p-5 rounded-3xl text-center">
-                    <Text className="text-indigo-400 font-black uppercase text-[9px] tracking-widest mb-2">Neural Fit Rank</Text>
-                    <Metric className="text-white font-black text-3xl">TOP 1%</Metric>
-                </Card>
+                <Card className="bg-slate-900/80 border-slate-800/60 p-5 rounded-3xl text-center"><Text className="text-slate-500 font-black uppercase text-[9px] tracking-widest mb-2">Match %</Text><Metric className="text-white font-black text-3xl">{(selectedCandidate?.score || 0) * 10}%</Metric></Card>
+                <Card className="bg-slate-900/80 border-slate-800/60 p-5 rounded-3xl text-center"><Text className="text-slate-500 font-black uppercase text-[9px] tracking-widest mb-2">Integrity</Text><Metric className="text-emerald-500 font-black text-3xl">VERIFIED</Metric></Card>
+                <Card className="bg-slate-900/80 border-slate-800/60 p-5 rounded-3xl text-center"><Text className="text-slate-500 font-black uppercase text-[9px] tracking-widest mb-2">Phase</Text><Metric className="text-white font-black text-3xl">FINAL</Metric></Card>
+                <Card className="bg-indigo-600/10 border-indigo-500/30 p-5 rounded-3xl text-center"><Text className="text-indigo-400 font-black uppercase text-[9px] tracking-widest mb-2">Rank</Text><Metric className="text-white font-black text-3xl">TOP 1%</Metric></Card>
             </Grid>
-
             <Grid numItemsMd={2} className="gap-12">
                 <div className="space-y-8">
                     <div className="p-8 bg-slate-900/40 rounded-[2.5rem] border border-slate-800/50 shadow-inner">
-                        <Title className="text-white text-[10px] uppercase tracking-[0.3em] font-black mb-6 border-b border-slate-800 pb-3 flex items-center italic"><Phone className="w-4 h-4 mr-2 text-indigo-500" /> Secure Contact Channels</Title>
+                        <Title className="text-white text-[10px] uppercase tracking-[0.3em] font-black mb-6 border-b border-slate-800 pb-3 flex items-center italic"><Phone className="w-4 h-4 mr-2 text-indigo-500" /> Contact Channels</Title>
                         <div className="space-y-6">
-                            <div>
-                                <Text className="text-slate-500 text-[9px] font-black uppercase tracking-widest mb-1">Authenticated Email</Text>
-                                <Text className="text-indigo-400 text-lg font-black truncate leading-none">{selectedCandidate?.email}</Text>
-                            </div>
-                            <div>
-                                <Text className="text-slate-500 text-[9px] font-black uppercase tracking-widest mb-1">Direct Communication</Text>
-                                <Text className="text-emerald-400 text-lg font-black tracking-widest leading-none underline decoration-emerald-500/20 underline-offset-4">{selectedCandidate?.phone || "NOT_PROVIDED"}</Text>
-                            </div>
+                            <div><Text className="text-slate-500 text-[9px] font-black uppercase tracking-widest mb-1">Email</Text><Text className="text-indigo-400 text-lg font-black truncate">{selectedCandidate?.email}</Text></div>
+                            <div><Text className="text-slate-500 text-[9px] font-black uppercase tracking-widest mb-1">Phone</Text><Text className="text-emerald-400 text-lg font-black tracking-widest leading-none">{selectedCandidate?.phone || "NOT_PROVIDED"}</Text></div>
                         </div>
                     </div>
-
                     <div className="p-10 bg-indigo-600/5 border border-indigo-500/10 rounded-[2.5rem] relative overflow-hidden group shadow-2xl">
-                        <CheckCircle className="absolute -right-12 -bottom-12 w-56 h-56 text-indigo-500/5 group-hover:rotate-12 transition-transform duration-1000" />
-                        <Title className="text-indigo-400 text-[10px] uppercase font-black tracking-[0.5em] mb-6 flex items-center italic underline underline-offset-8">AI Rationale Justification</Title>
-                        <Text className="text-slate-200 leading-relaxed text-2xl font-bold italic tracking-tight">"{selectedCandidate?.justification || "Synchronizing evaluator metadata..."}"</Text>
+                        <Title className="text-indigo-400 text-[10px] uppercase font-black mb-6 italic underline underline-offset-8">AI Rationale Justification</Title>
+                        <Text className="text-slate-200 leading-relaxed text-2xl font-bold italic">"{selectedCandidate?.justification || "Parsing metadata..."}"</Text>
                     </div>
                 </div>
-
                 <div className="bg-slate-900/30 border border-slate-800/50 p-10 rounded-[3rem] shadow-inner flex flex-col">
-                    <Title className="text-slate-400 text-[10px] uppercase tracking-[0.4em] font-black mb-8 border-b border-slate-800 pb-3 italic">Tech Match Distribution</Title>
-                    <BarChart
-                        data={getSkillChartData(selectedCandidate?.skills)}
-                        index="name"
-                        categories={["Match"]}
-                        colors={["indigo"]}
-                        yAxisWidth={32}
-                        className="h-72 mt-2"
-                        showLegend={false}
-                        layout="vertical"
-                        showGridLines={false}
-                    />
+                    <Title className="text-slate-400 text-[10px] uppercase font-black mb-8 border-b border-slate-800 pb-3 italic">Tech Match Breakdown</Title>
+                    <BarChart data={getSkillChartData(selectedCandidate?.skills)} index="name" categories={["Match"]} colors={["indigo"]} yAxisWidth={32} className="h-72 mt-2" showLegend={false} layout="vertical" showGridLines={false} />
                 </div>
             </Grid>
-
             <div className="flex gap-8 mt-16 pb-4">
-                <Button className="w-full py-8 rounded-[2rem] bg-indigo-600 hover:bg-indigo-500 font-black text-xl border-none shadow-[0_20px_50px_rgba(79,70,229,0.4)] hover:-translate-y-2 transition-all uppercase tracking-[0.2em] italic">INITIATE INTERVIEW</Button>
-                <Button variant="secondary" className="w-full py-8 rounded-[2rem] border-slate-800 text-slate-500 font-black hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/30 transition-all uppercase tracking-widest">ARCHIVE</Button>
+                <Button className="w-full py-8 rounded-[2rem] bg-indigo-600 hover:bg-indigo-500 font-black text-xl border-none shadow-[0_20px_50px_rgba(79,70,229,0.4)] transition-all uppercase tracking-[0.2em] italic">INITIATE INTERVIEW</Button>
+                <Button variant="secondary" className="w-full py-8 rounded-[2rem] border-slate-800 text-slate-500 font-black hover:bg-rose-500/10 hover:text-rose-400 transition-all uppercase tracking-widest">ARCHIVE</Button>
             </div>
           </div>
         </DialogPanel>
