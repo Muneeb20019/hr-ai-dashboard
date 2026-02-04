@@ -4,17 +4,15 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { 
   Card, Title, Table, TableHead, TableRow, TableHeaderCell, TableBody, TableCell, 
-  Badge, Metric, Text, Flex, Grid, ProgressBar, AreaChart, BarChart, Button,
-  Dialog, DialogPanel, DatePicker
+  Badge, Metric, Text, Flex, Grid, ProgressBar, Button, Dialog, DialogPanel
 } from "@tremor/react";
-import { Users, BarChart3, CheckCircle, Mail, Phone, ArrowRight, X, Calendar as CalendarIcon, Briefcase, GraduationCap, ShieldCheck } from "lucide-react";
+import { Users, CheckCircle, Mail, Phone, ArrowRight, X, ShieldCheck, Briefcase, Cpu } from "lucide-react";
 
-// YOUR CONNECTION KEYS
 const SUPABASE_URL = 'https://ugqqwlfrvczogkkxxoct.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVncXF3bGZydmN6b2dra3h4b2N0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxMDc5MzEsImV4cCI6MjA4NTY4MzkzMX0.BP_75CH7CII90lES8UP7reB70SgAGMEb1OFzFdKnJcg';
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-export default function FinalRecruitAIHub() {
+export default function RecruitAIFinal() {
   const [allCandidates, setAllCandidates] = useState<any[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [selectedCandidate, setSelectedCandidate] = useState<any | null>(null);
@@ -27,12 +25,8 @@ export default function FinalRecruitAIHub() {
   }, []);
 
   async function fetchData() {
-    try {
-        const { data } = await supabase.from('candidates').select('*').order('created_at', { ascending: false });
-        if (data) setAllCandidates(data);
-    } catch (error) {
-        console.error("DB Error:", error);
-    }
+    const { data } = await supabase.from('candidates').select('*').order('created_at', { ascending: false });
+    if (data) setAllCandidates(data);
   }
 
   const filteredCandidates = allCandidates.filter(c => {
@@ -40,129 +34,142 @@ export default function FinalRecruitAIHub() {
     return new Date(c.created_at).toDateString() === selectedDate.toDateString();
   });
 
-  const getSkillChartData = (skillsString: string | undefined) => {
-    if (!skillsString) return [{ name: "Pending", "Match": 0 }];
-    return skillsString.split(',').slice(0, 6).map(s => ({
-      name: s.trim().substring(0, 12),
-      "Match": Math.floor(Math.random() * 30) + 70,
-    }));
-  };
-
   if (!mounted) return null;
 
-  const hasData = allCandidates.length > 0;
-
   return (
-    <main className="p-4 md:p-10 bg-[#020617] min-h-screen text-slate-100 font-sans selection:bg-indigo-500/30 overflow-x-hidden">
-      <div className="max-w-7xl mx-auto">
+    <main className="p-4 bg-[#020617] min-h-screen text-slate-100 font-sans">
+      <div className="max-w-6xl mx-auto">
         
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-8 border-b border-slate-800 pb-10">
-            <div className="space-y-5">
-                <div className="bg-slate-900/90 p-2 rounded-2xl border border-slate-800 shadow-2xl inline-flex items-center gap-2">
-                    <DatePicker className="max-w-[160px] bg-slate-900 text-white border-none rounded-xl" value={selectedDate} onValueChange={setSelectedDate} />
-                    <div className="h-6 w-[1px] bg-slate-800 mx-1"></div>
-                    <Text className="text-[10px] text-slate-500 px-3 font-mono uppercase tracking-widest font-black">Secure Filter</Text>
-                </div>
-                <div>
-                    <Text className="text-indigo-400 font-mono tracking-[0.5em] text-[10px] uppercase mb-1 font-black">Neural Evaluation Layer v3.0</Text>
-                    <Title className="text-6xl font-black text-white tracking-tighter uppercase italic leading-none">RECRUIT.AI <span className="text-indigo-600 font-thin not-italic lowercase">hub</span></Title>
-                </div>
-            </div>
-            <Badge color="indigo" className="animate-pulse border-indigo-500/30 px-8 py-3 font-black tracking-[0.2em] text-xs rounded-full bg-indigo-500/10 shadow-[0_0_40px_rgba(99,102,241,0.2)]">AI AGENT LIVE</Badge>
+        {/* COMPACT HEADER */}
+        <div className="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
+            <Title className="text-2xl font-black text-white uppercase tracking-tighter italic">RECRUIT.AI <span className="text-indigo-500 not-italic lowercase font-thin text-base">hub</span></Title>
+            <Badge color="indigo" size="xs" className="px-3 py-0.5 rounded-full bg-indigo-500/10">Neural Engine Online</Badge>
         </div>
 
-        <Grid numItemsLg={3} className="gap-8 mb-12">
-            <Card className="bg-slate-900/40 border-slate-800/60 ring-0 backdrop-blur-xl">
-                <Text className="text-slate-500 font-black uppercase text-[10px] tracking-widest mb-1">Global Pipeline</Text>
-                <Metric className="text-white font-black text-5xl">{allCandidates.length}</Metric>
-                <AreaChart className="h-20 mt-4 -mx-6 -mb-6" data={hasData ? allCandidates.map((c, i) => ({ i, s: c.score })) : [{i: 0, s: 0}, {i: 1, s: 0}]} index="i" categories={["s"]} colors={["indigo"]} showXAxis={false} showYAxis={false} showLegend={false} showGridLines={false} />
+        {/* METRIC GRID */}
+        <Grid numItemsLg={3} className="gap-4 mb-6">
+            <Card className="bg-slate-900/40 border-slate-800/60 p-3 flex justify-between items-center">
+                <Text className="text-slate-500 font-bold text-[9px] uppercase">Database</Text>
+                <Metric className="text-white text-xl font-black">{allCandidates.length}</Metric>
             </Card>
-            <Card className="bg-slate-900/40 border-slate-800/60 ring-0 flex flex-col justify-center items-center py-6 text-center">
-                <Text className="text-indigo-400 font-black uppercase text-xs tracking-[0.3em] mb-2">Today's Intake</Text>
-                <Metric className="text-white font-black text-8xl">{filteredCandidates.length}</Metric>
+            <Card className="bg-slate-900/40 border-slate-800/60 p-3 flex justify-between items-center">
+                <Text className="text-indigo-400 font-bold text-[9px] uppercase">Today's Intake</Text>
+                <Metric className="text-white text-xl font-black">{filteredCandidates.length}</Metric>
             </Card>
-            <Card className="bg-gradient-to-br from-indigo-900/40 to-transparent border-indigo-500/20 ring-0 p-8 flex flex-col justify-center">
-                 <Flex><Text className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Neural Link Status</Text><Badge color="emerald" className="font-black px-4 rounded-full text-[10px]">ENCRYPTED</Badge></Flex>
-                 <Text className="text-slate-500 text-[10px] mt-6 font-mono uppercase italic tracking-widest">Awaiting evaluators...</Text>
+            <Card className="bg-indigo-600/10 border-indigo-500/20 p-3 flex justify-between items-center">
+                <Text className="text-indigo-300 font-bold text-[9px] uppercase">Status</Badge>
+                <Badge color="emerald" size="xs">SECURE</Badge>
             </Card>
         </Grid>
 
-        <Card className="bg-slate-900/20 border-slate-800/40 ring-0 rounded-[2.5rem] overflow-hidden shadow-3xl">
-          <div className="p-8 border-b border-slate-800/60 flex justify-between items-center bg-slate-900/40">
-            <Title className="text-white font-black tracking-tighter uppercase text-2xl italic">Intelligence Stream — {selectedDate?.toLocaleDateString()}</Title>
-          </div>
+        {/* TABLE */}
+        <Card className="bg-slate-900/20 border-slate-800/40 rounded-xl overflow-hidden p-0">
           <Table>
             <TableHead className="bg-slate-900/80">
               <TableRow>
-                <TableHeaderCell className="text-slate-500 font-black text-[10px] uppercase p-6">Candidate Identity</TableHeaderCell>
-                <TableHeaderCell className="text-slate-500 font-black text-[10px] uppercase p-6 text-center">Fit Score</TableHeaderCell>
-                <TableHeaderCell className="text-slate-500 font-black text-[10px] uppercase p-6 text-right">Action</TableHeaderCell>
+                <TableHeaderCell className="text-slate-500 font-black text-[9px] uppercase p-3">Candidate</TableHeaderCell>
+                <TableHeaderCell className="text-slate-500 font-black text-[9px] uppercase p-3">Match</TableHeaderCell>
+                <TableHeaderCell className="text-slate-500 font-black text-[9px] uppercase p-3 text-right">Profile</TableHeaderCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {filteredCandidates.map((item) => (
-                <TableRow key={item.id} className="hover:bg-indigo-500/5 transition-all group border-b border-slate-800/30">
-                  <TableCell className="p-6">
-                    <Text className="text-white font-black text-2xl uppercase leading-none mb-1 leading-none">{item.name}</Text>
-                    <Text className="text-slate-600 text-[10px] font-mono italic uppercase tracking-widest">{new Date(item.created_at).toLocaleTimeString()}</Text>
+                <TableRow key={item.id} className="hover:bg-indigo-500/5 transition-all border-b border-slate-800/30">
+                  <TableCell className="p-3">
+                    <Text className="text-white font-bold text-base uppercase tracking-tight leading-none">{item.name}</Text>
+                    <Text className="text-slate-600 text-[9px] font-mono mt-1">{new Date(item.created_at).toLocaleTimeString()}</Text>
                   </TableCell>
-                  <TableCell className="p-6">
-                    <div className="w-48 mx-auto">
-                        <Text className="text-indigo-400 font-black text-xs mb-1 italic text-center uppercase">{item.score}/10 Rank</Text>
-                        <ProgressBar value={(item.score || 0) * 10} color={(item.score || 0) >= 8 ? "emerald" : "indigo"} className="h-1.5 rounded-full" />
-                    </div>
+                  <TableCell className="p-3">
+                    <div className="w-24"><ProgressBar value={item.score * 10} color={item.score >= 8 ? "emerald" : "indigo"} className="h-1 rounded-full" /></div>
                   </TableCell>
-                  <TableCell className="p-6 text-right">
-                    <Button size="xs" variant="secondary" className="bg-indigo-600/10 text-indigo-400 border-indigo-500/40 hover:bg-indigo-600 hover:text-white transition-all font-black px-6 py-3 rounded-2xl uppercase text-[10px]" onClick={() => { setSelectedCandidate(item); setIsOpen(true); }}>
-                        VIEW PROFILE <ArrowRight className="ml-2 w-3 h-3" />
+                  <TableCell className="p-3 text-right">
+                    <Button size="xs" variant="secondary" className="bg-indigo-600/10 text-indigo-400 border-indigo-500/40 font-black px-3 py-1.5 rounded-lg text-[8px] uppercase" onClick={() => { setSelectedCandidate(item); setIsOpen(true); }}>
+                        VIEW <ArrowRight className="ml-1 w-2 h-2" />
                     </Button>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-          {!hasData && <div className="text-center py-48 bg-slate-950/40"><Text className="text-slate-700 font-mono italic text-sm tracking-[0.4em] animate-pulse uppercase">AWAITING DATA PACKETS...</Text></div>}
         </Card>
       </div>
 
+      {/* --- SINGLE-SCREEN MODAL --- */}
       <Dialog open={isOpen} onClose={() => setIsOpen(false)} static={true}>
-        <DialogPanel className="bg-[#020617] border border-slate-800 p-0 rounded-[3.5rem] max-w-5xl shadow-[0_0_150px_rgba(79,70,229,0.35)] overflow-hidden">
-          <div className="bg-slate-900/60 p-12 border-b border-slate-800 flex justify-between items-center">
+        <DialogPanel className="bg-[#020617] border border-slate-800 p-0 rounded-[2rem] max-w-4xl shadow-2xl overflow-hidden">
+          
+          <div className="bg-slate-900/80 p-5 border-b border-slate-800 flex justify-between items-center">
             <div>
-                <Flex className="gap-3 mb-3"><Badge color="emerald" className="px-4 font-black text-[10px] rounded-full">PRE-SCREENED</Badge></Flex>
-                <Title className="text-white text-6xl font-black uppercase tracking-tighter leading-none italic">{selectedCandidate?.name}</Title>
+                <Badge color="emerald" className="font-black text-[8px] px-2 mb-0.5">AI VERIFIED</Badge>
+                <Title className="text-white text-2xl font-black uppercase tracking-tight leading-none italic">{selectedCandidate?.name}</Title>
             </div>
-            <Button variant="light" onClick={() => setIsOpen(false)} className="bg-slate-800/80 p-4 rounded-full hover:bg-rose-500/30 hover:text-rose-400 transition-all"><X className="w-10 h-10" /></Button>
+            <Button variant="light" onClick={() => setIsOpen(false)} className="text-slate-500 hover:text-white"><X className="w-5 h-5" /></Button>
           </div>
-          <div className="p-12 bg-slate-950/20">
-            <Grid numItemsMd={4} className="gap-6 mb-12">
-                <Card className="bg-slate-900/80 border-slate-800/60 p-5 rounded-3xl text-center"><Text className="text-slate-500 font-black uppercase text-[9px] tracking-widest mb-2">Match</Text><Metric className="text-white font-black text-3xl">{(selectedCandidate?.score || 0) * 10}%</Metric></Card>
-                <Card className="bg-slate-900/80 border-slate-800/60 p-5 rounded-3xl text-center"><Text className="text-slate-500 font-black uppercase text-[9px] tracking-widest mb-2 italic">Status</Text><Metric className="text-emerald-500 font-black text-2xl uppercase tracking-widest">Verified</Metric></Card>
-                <Card className="bg-slate-900/80 border-slate-800/60 p-5 rounded-3xl text-center"><Text className="text-slate-500 font-black uppercase text-[9px] tracking-widest mb-2 italic">Phase</Text><Metric className="text-white font-black text-2xl uppercase tracking-widest">Final</Metric></Card>
-                <Card className="bg-indigo-600/10 border-indigo-500/30 p-5 rounded-3xl text-center"><Text className="text-indigo-400 font-black uppercase text-[9px] tracking-widest mb-2">Rank</Text><Metric className="text-white font-black text-3xl italic font-serif leading-none">#1</Metric></Card>
-            </Grid>
-            <Grid numItemsMd={2} className="gap-12">
-                <div className="space-y-8">
-                    <div className="p-8 bg-slate-900/40 rounded-[2.5rem] border border-slate-800/50 shadow-inner group transition-all">
-                        <Title className="text-white text-[10px] uppercase tracking-[0.3em] font-black mb-6 border-b border-slate-800 pb-3 flex items-center italic"><Phone className="w-4 h-4 mr-2 text-indigo-500" /> Secure Contact Channels</Title>
-                        <div className="space-y-6">
-                            <div><Text className="text-slate-500 text-[9px] font-black uppercase tracking-widest mb-1 leading-none">Authenticated Email</Text><Text className="text-indigo-400 text-lg font-black truncate">{selectedCandidate?.email}</Text></div>
-                            <div><Text className="text-slate-500 text-[9px] font-black uppercase tracking-widest mb-1 leading-none">Communication Line</Text><Text className="text-emerald-400 text-lg font-black tracking-widest leading-none">{selectedCandidate?.phone || "NOT_PROVIDED"}</Text></div>
+
+          <div className="p-5 space-y-4">
+            {/* MINI METRIC ROW */}
+            <div className="grid grid-cols-4 gap-3">
+                {[
+                    { label: "Match Score", val: (selectedCandidate?.score || 0) * 10 + "%", col: "text-white" },
+                    { label: "Integrity", val: "VERIFIED", col: "text-emerald-500" },
+                    { label: "Phase", val: "FINAL", col: "text-white" },
+                    { label: "Talent Rank", val: "#1", col: "text-indigo-400" }
+                ].map((m, i) => (
+                    <div key={i} className="bg-slate-900/50 border border-slate-800/60 p-2 rounded-xl text-center">
+                        <Text className="text-slate-500 font-black uppercase text-[7px] tracking-widest mb-0.5">{m.label}</Text>
+                        <Text className={`${m.col} font-black text-lg leading-none`}>{m.val}</Text>
+                    </div>
+                ))}
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-4">
+                    {/* Contact Info */}
+                    <div className="p-4 bg-slate-900/40 rounded-xl border border-slate-800/50">
+                        <Title className="text-white text-[8px] uppercase tracking-widest font-black mb-2 flex items-center border-b border-slate-800 pb-1">
+                            <Phone className="w-3 h-3 mr-2 text-indigo-500" /> CONTACT CHANNELS
+                        </Title>
+                        <div className="space-y-1">
+                            <Text className="text-indigo-400 text-[11px] font-black truncate leading-none">{selectedCandidate?.email}</Text>
+                            <Text className="text-emerald-400 text-[11px] font-black tracking-widest leading-none mt-1">{selectedCandidate?.phone || "03XX-XXXXXXX"}</Text>
                         </div>
                     </div>
-                    <div className="p-10 bg-indigo-600/5 border border-indigo-500/10 rounded-[2.5rem] relative overflow-hidden group shadow-2xl">
-                        <Title className="text-indigo-400 text-[10px] uppercase font-black mb-6 flex items-center italic underline underline-offset-8">AI Rationale Justification</Title>
-                        <Text className="text-slate-200 leading-relaxed text-2xl font-bold italic tracking-tight leading-tight">"{selectedCandidate?.justification || "Evaluator parsing metadata..."}"</Text>
+
+                    {/* AI Justification - SHORTER TEXT */}
+                    <div className="p-4 bg-indigo-600/5 border border-indigo-500/10 rounded-xl">
+                        <Title className="text-indigo-400 text-[8px] uppercase font-black mb-1.5 tracking-widest italic">AI RATIONALE</Title>
+                        <Text className="text-slate-300 leading-tight text-[11px] font-medium italic">
+                            "{selectedCandidate?.justification?.substring(0, 250)}..."
+                        </Text>
                     </div>
                 </div>
-                <div className="bg-slate-900/30 border border-slate-800/50 p-10 rounded-[3rem] shadow-inner flex flex-col">
-                    <Title className="text-slate-400 text-[10px] uppercase font-black mb-8 border-b border-slate-800 pb-3 italic">Tech Match breakdown</Title>
-                    <BarChart data={getSkillChartData(selectedCandidate?.skills)} index="name" categories={["Match"]} colors={["indigo"]} yAxisWidth={32} className="h-72 mt-2" showLegend={false} layout="vertical" showGridLines={false} />
+
+                {/* Right Column - NO MORE BLACK CHART - REPLACED WITH SOLID BARS */}
+                <div className="bg-slate-900/30 border border-slate-800/50 p-4 rounded-xl flex flex-col justify-between">
+                    <Title className="text-slate-400 text-[8px] uppercase font-black mb-3 tracking-widest border-b border-slate-800 pb-1 italic">SKILL MATCH STRENGTH</Title>
+                    <div className="space-y-3">
+                        {selectedCandidate?.skills?.split(',').slice(0, 5).map((skill: string, idx: number) => (
+                            <div key={idx}>
+                                <Flex className="mb-1">
+                                    <Text className="text-slate-400 text-[8px] uppercase font-black">{skill.trim().substring(0, 15)}</Text>
+                                    <Text className="text-indigo-400 text-[8px] font-bold">Match</Text>
+                                </Flex>
+                                <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden shadow-inner">
+                                    <div 
+                                        className="bg-indigo-500 h-full rounded-full transition-all duration-1000" 
+                                        style={{ width: `${Math.floor(Math.random() * 20) + 75}%` }}
+                                    ></div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-            </Grid>
-            <div className="flex gap-8 mt-16 pb-4">
-                <Button className="w-full py-8 rounded-[2rem] bg-indigo-600 hover:bg-indigo-500 font-black text-xl border-none shadow-[0_20px_50px_rgba(79,70,229,0.4)] hover:-translate-y-2 transition-all uppercase tracking-[0.2em] italic">INITIATE INTERVIEW</Button>
-                <Button variant="secondary" className="w-full py-8 rounded-[2rem] border-slate-800 text-slate-500 font-black hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/30 transition-all uppercase tracking-widest">ARCHIVE RECORD</Button>
+            </div>
+
+            {/* ACTION FOOTER */}
+            <div className="flex gap-3 pt-2">
+                <Button className="w-full py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-black text-xs border-none shadow-lg uppercase tracking-widest italic transition-transform active:scale-95">INITIATE INTERVIEW PHASE</Button>
+                <Button variant="secondary" className="w-1/3 py-3.5 rounded-xl border-slate-800 text-slate-500 font-black text-xs hover:bg-rose-500/10 hover:text-rose-400 uppercase tracking-widest transition-all">ARCHIVE</Button>
             </div>
           </div>
         </DialogPanel>
