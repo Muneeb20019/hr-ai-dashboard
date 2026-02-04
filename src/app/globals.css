@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+body {
+  background-color: #020617; 
+  color: #f8fafc;
+}
+
+/* Ensure the Modal and Charts are SOLID DARK */
+div[role="dialog"], 
+.tremor-base,
+div[data-radix-popper-content-wrapper] {
+  background-color: #0f172a !important; 
+  opacity: 1 !important;
+  border: 1px solid #1e293b !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8) !important;
+  z-index: 9999 !important;
+}
+
+/* Fix for overlapping text */
+.relative { z-index: 10; }
