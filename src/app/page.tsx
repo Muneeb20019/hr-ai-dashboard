@@ -48,7 +48,7 @@ export default function FinalRecruitAIHub() {
     <main className="p-4 md:p-10 bg-[#020617] min-h-screen text-slate-100 font-sans selection:bg-indigo-500/30 overflow-x-hidden">
       <div className="max-w-7xl mx-auto">
         
-        {/* HEADER SECTION */}
+        {/* HEADER SECTION - NEW TAGLINE ADDED HERE */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-8 border-b border-slate-800 pb-10">
             <div className="space-y-5">
                 <div className="bg-slate-900/90 p-2 rounded-2xl border border-slate-800 shadow-2xl inline-flex items-center gap-2">
@@ -57,14 +57,16 @@ export default function FinalRecruitAIHub() {
                     <Text className="text-[10px] text-slate-500 px-3 font-mono uppercase tracking-widest font-black">Neural Filter</Text>
                 </div>
                 <div>
-                    <Text className="text-indigo-400 font-mono tracking-[0.5em] text-[10px] uppercase mb-1 font-black">Neural Evaluation Layer v4.2</Text>
+                    <Text className="text-indigo-400 font-medium tracking-wide text-xs mb-2 italic">
+                        AI-Driven Talent Insights for Smarter Decisions
+                    </Text>
                     <Title className="text-6xl font-black text-white tracking-tighter uppercase italic leading-none">RECRUIT.AI <span className="text-indigo-600 font-thin not-italic lowercase">hub</span></Title>
                 </div>
             </div>
             <Badge color="indigo" className="animate-pulse border-indigo-500/30 px-8 py-3 font-black tracking-[0.2em] text-xs rounded-full bg-indigo-500/10 shadow-[0_0_40px_rgba(99,102,241,0.2)]">AI AGENT LIVE</Badge>
         </div>
 
-        {/* METRICS GRID - ADJUSTED TO 2 COLUMNS FOR BETTER FOCUS */}
+        {/* METRICS GRID */}
         <Grid numItemsLg={2} className="gap-8 mb-12">
             <Card className="bg-slate-900/40 border-slate-800/60 ring-0 backdrop-blur-xl p-8">
                 <Text className="text-slate-500 font-black uppercase text-[10px] tracking-widest mb-1">Global Database Volume</Text>
@@ -116,7 +118,7 @@ export default function FinalRecruitAIHub() {
         </Card>
       </div>
 
-      {/* --- POPUP MODAL --- */}
+      {/* POPUP MODAL */}
       <Dialog open={isOpen} onClose={() => setIsOpen(false)} static={true}>
         <DialogPanel className="bg-[#020617] border border-slate-800 p-0 rounded-[3.5rem] max-w-5xl shadow-[0_0_150px_rgba(79,70,229,0.35)] overflow-hidden">
           
@@ -163,7 +165,7 @@ export default function FinalRecruitAIHub() {
                 <div className="p-10 bg-indigo-600/5 border border-indigo-500/10 rounded-[2.5rem] relative overflow-hidden group shadow-2xl flex flex-col justify-start max-h-[350px]">
                     <Title className="text-indigo-400 text-[10px] uppercase font-black mb-6 italic underline underline-offset-8 decoration-indigo-500/30 tracking-[0.4em]">AI Analysis</Title>
                     <div className="overflow-y-auto pr-4 scrollbar-hide">
-                        <Text className="text-slate-300 leading-relaxed text-xl font-bold italic tracking-tight">
+                        <Text className="text-slate-200 leading-relaxed text-xl font-bold italic tracking-tight">
                             "{selectedCandidate?.justification}"
                         </Text>
                     </div>
