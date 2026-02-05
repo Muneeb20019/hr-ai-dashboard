@@ -64,20 +64,16 @@ export default function FinalRecruitAIHub() {
             <Badge color="indigo" className="animate-pulse border-indigo-500/30 px-8 py-3 font-black tracking-[0.2em] text-xs rounded-full bg-indigo-500/10 shadow-[0_0_40px_rgba(99,102,241,0.2)]">AI AGENT LIVE</Badge>
         </div>
 
-        {/* METRICS GRID */}
-        <Grid numItemsLg={3} className="gap-8 mb-12">
-            <Card className="bg-slate-900/40 border-slate-800/60 ring-0 backdrop-blur-xl">
-                <Text className="text-slate-500 font-black uppercase text-[10px] tracking-widest mb-1">Global Database</Text>
-                <Metric className="text-white font-black text-5xl">{allCandidates.length}</Metric>
-                <AreaChart className="h-20 mt-4 -mx-6 -mb-6" data={hasData ? allCandidates.map((c, i) => ({ i, s: c.score })) : [{i: 0, s: 0}, {i: 1, s: 0}]} index="i" categories={["s"]} colors={["indigo"]} showXAxis={false} showYAxis={false} showLegend={false} showGridLines={false} />
+        {/* METRICS GRID - ADJUSTED TO 2 COLUMNS FOR BETTER FOCUS */}
+        <Grid numItemsLg={2} className="gap-8 mb-12">
+            <Card className="bg-slate-900/40 border-slate-800/60 ring-0 backdrop-blur-xl p-8">
+                <Text className="text-slate-500 font-black uppercase text-[10px] tracking-widest mb-1">Global Database Volume</Text>
+                <Metric className="text-white font-black text-6xl">{allCandidates.length}</Metric>
+                <AreaChart className="h-28 mt-6 -mx-8 -mb-8" data={hasData ? allCandidates.map((c, i) => ({ i, s: c.score })) : [{i: 0, s: 0}, {i: 1, s: 0}]} index="i" categories={["s"]} colors={["indigo"]} showXAxis={false} showYAxis={false} showLegend={false} showGridLines={false} />
             </Card>
-            <Card className="bg-slate-900/40 border-slate-800/60 ring-0 flex flex-col justify-center items-center py-6 text-center">
-                <Text className="text-indigo-400 font-black uppercase text-xs tracking-[0.3em] mb-2">Today's Intake Feed</Text>
-                <Metric className="text-white font-black text-8xl drop-shadow-2xl">{filteredCandidates.length}</Metric>
-            </Card>
-            <Card className="bg-gradient-to-br from-indigo-900/40 to-transparent border-indigo-500/20 ring-0 p-8 flex flex-col justify-center">
-                 <Flex><Text className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Neural Link Status</Text><Badge color="emerald" className="font-black px-4 rounded-full text-[10px]">ENCRYPTED</Badge></Flex>
-                 <Text className="text-slate-500 text-[10px] mt-6 font-mono uppercase italic tracking-widest leading-relaxed">System processing metadata from secure n8n socket...</Text>
+            <Card className="bg-slate-900/40 border-slate-800/60 ring-0 flex flex-col justify-center items-center py-10 text-center rounded-[2.5rem]">
+                <Text className="text-indigo-400 font-black uppercase text-[12px] tracking-[0.4em] mb-4">Today's Intake Feed</Text>
+                <Metric className="text-white font-black text-[10rem] leading-none drop-shadow-[0_0_50px_rgba(99,102,241,0.4)]">{filteredCandidates.length}</Metric>
             </Card>
         </Grid>
 
@@ -120,7 +116,7 @@ export default function FinalRecruitAIHub() {
         </Card>
       </div>
 
-      {/* --- RE-SIZED MODAL WITH FULL CONTENT --- */}
+      {/* --- POPUP MODAL --- */}
       <Dialog open={isOpen} onClose={() => setIsOpen(false)} static={true}>
         <DialogPanel className="bg-[#020617] border border-slate-800 p-0 rounded-[3.5rem] max-w-5xl shadow-[0_0_150px_rgba(79,70,229,0.35)] overflow-hidden">
           
@@ -133,7 +129,6 @@ export default function FinalRecruitAIHub() {
           </div>
 
           <div className="p-10 space-y-10">
-            {/* BIG METRIC ROW */}
             <div className="grid grid-cols-4 gap-6">
                 {[
                     { label: "MATCH SCORE", val: (selectedCandidate?.score || 0) * 10 + "%", col: "text-white" },
@@ -151,25 +146,24 @@ export default function FinalRecruitAIHub() {
             <Grid numItemsMd={2} className="gap-12">
                 <div className="space-y-8">
                     <div className="p-8 bg-slate-900/40 rounded-[2.5rem] border border-slate-800 shadow-inner group transition-all">
-                        <Title className="text-white text-[10px] uppercase tracking-[0.3em] font-black mb-6 border-b border-slate-800 pb-3 flex items-center italic"><Phone className="w-4 h-4 mr-2 text-indigo-500" /> Secure Contact Channels</Title>
+                        <Title className="text-white text-[10px] uppercase tracking-[0.3em] font-black mb-6 border-b border-slate-800 pb-3 flex items-center italic"><Phone className="w-4 h-4 mr-2 text-indigo-500" /> Contact Channels</Title>
                         <div className="space-y-6">
                             <div>
-                                <Text className="text-slate-600 text-[10px] font-black uppercase tracking-widest mb-1 leading-none">Authenticated Email</Text>
+                                <Text className="text-slate-600 text-[9px] font-black uppercase tracking-widest mb-1 leading-none">Email Address</Text>
                                 <Text className="text-indigo-400 text-xl font-black truncate leading-none underline decoration-indigo-500/20 underline-offset-8">{selectedCandidate?.email}</Text>
                             </div>
                             <div>
-                                <Text className="text-slate-600 text-[10px] font-black uppercase tracking-widest mb-1 leading-none">Direct Communication Line</Text>
+                                <Text className="text-slate-600 text-[9px] font-black uppercase tracking-widest mb-1 leading-none">Phone Line</Text>
                                 <Text className="text-emerald-400 text-xl font-black tracking-widest leading-none">{selectedCandidate?.phone || "NOT_PROVIDED"}</Text>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* AI ANALYSIS BOX - NO TRUNCATION, WITH AUTO-SCROLL */}
-                <div className="p-10 bg-indigo-600/5 border border-indigo-500/10 rounded-[2.5rem] relative overflow-hidden group shadow-2xl flex flex-col justify-start max-h-[300px]">
-                    <Title className="text-indigo-400 text-[10px] uppercase font-black mb-6 italic underline underline-offset-8 decoration-indigo-500/30 tracking-[0.3em]">AI Analysis</Title>
+                <div className="p-10 bg-indigo-600/5 border border-indigo-500/10 rounded-[2.5rem] relative overflow-hidden group shadow-2xl flex flex-col justify-start max-h-[350px]">
+                    <Title className="text-indigo-400 text-[10px] uppercase font-black mb-6 italic underline underline-offset-8 decoration-indigo-500/30 tracking-[0.4em]">AI Analysis</Title>
                     <div className="overflow-y-auto pr-4 scrollbar-hide">
-                        <Text className="text-slate-200 leading-relaxed text-lg font-bold italic tracking-tight">
+                        <Text className="text-slate-300 leading-relaxed text-xl font-bold italic tracking-tight">
                             "{selectedCandidate?.justification}"
                         </Text>
                     </div>
@@ -177,7 +171,7 @@ export default function FinalRecruitAIHub() {
             </Grid>
 
             <div className="flex gap-8 mt-16 pb-4">
-                <Button className="w-full py-8 rounded-[2rem] bg-indigo-600 hover:bg-indigo-500 font-black text-xl border-none shadow-[0_20px_50px_rgba(79,70,229,0.4)] hover:-translate-y-2 transition-all uppercase tracking-[0.2em] italic active:scale-95">INITIATE INTERVIEW PHASE</Button>
+                <Button className="w-full py-8 rounded-[2rem] bg-indigo-600 hover:bg-indigo-500 font-black text-xl border-none shadow-[0_20px_50px_rgba(79,70,229,0.4)] hover:-translate-y-2 transition-all uppercase tracking-[0.2em] italic active:scale-95">INITIATE INTERVIEW</Button>
                 <Button variant="secondary" className="w-1/3 py-8 rounded-[2rem] border-slate-800 text-slate-500 font-black hover:bg-rose-500/10 hover:text-rose-400 transition-all uppercase tracking-widest">ARCHIVE RECORD</Button>
             </div>
           </div>
