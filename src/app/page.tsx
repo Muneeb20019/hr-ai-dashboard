@@ -48,7 +48,7 @@ export default function FinalRecruitAIHub() {
     <main className="p-4 md:p-10 bg-[#020617] min-h-screen text-slate-100 font-sans selection:bg-indigo-500/30 overflow-x-hidden">
       <div className="max-w-7xl mx-auto">
         
-        {/* HEADER SECTION - Balanced Sizes */}
+        {/* HEADER SECTION */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-8 border-b border-slate-800 pb-10">
             <div className="space-y-4">
                 <div className="bg-slate-900/90 p-2 rounded-2xl border border-slate-800 shadow-2xl inline-flex items-center gap-2">
@@ -57,7 +57,7 @@ export default function FinalRecruitAIHub() {
                     <Text className="text-[10px] text-slate-500 px-3 font-mono uppercase tracking-widest font-black">Secure Filter</Text>
                 </div>
                 <div>
-                    {/* ENHANCED TAGLINE - Bold and Readable */}
+                    {/* BOLD TAGLINE */}
                     <Text className="text-indigo-400 font-black tracking-wide text-2xl mb-2 italic drop-shadow-md">
                         "AI-Driven Talent Insights for Smarter Decisions"
                     </Text>
@@ -67,20 +67,22 @@ export default function FinalRecruitAIHub() {
             <Badge color="indigo" className="animate-pulse border-indigo-500/30 px-6 py-2 font-black tracking-[0.2em] text-[10px] rounded-full bg-indigo-500/10">AI AGENT LIVE</Badge>
         </div>
 
-        {/* METRICS GRID - Balanced Sizes */}
+        {/* UPDATED METRICS GRID */}
         <Grid numItemsLg={2} className="gap-8 mb-12">
             <Card className="bg-slate-900/40 border-slate-800/60 ring-0 backdrop-blur-xl p-8">
-                <Text className="text-slate-500 font-black uppercase text-[10px] tracking-widest mb-1">Global Pipeline Volume</Text>
+                {/* RENAMED WORDING */}
+                <Text className="text-slate-500 font-black uppercase text-[10px] tracking-widest mb-1">Total Talent Pool</Text>
                 <Metric className="text-white font-black text-5xl">{allCandidates.length}</Metric>
                 <AreaChart className="h-24 mt-4 -mx-8 -mb-8" data={hasData ? allCandidates.map((c, i) => ({ i, s: c.score })) : [{i: 0, s: 0}, {i: 1, s: 0}]} index="i" categories={["s"]} colors={["indigo"]} showXAxis={false} showYAxis={false} showLegend={false} showGridLines={false} />
             </Card>
             <Card className="bg-slate-900/40 border-slate-800/60 ring-0 flex flex-col justify-center items-center py-8 text-center rounded-[2.5rem]">
-                <Text className="text-indigo-400 font-black uppercase text-xs tracking-[0.3em] mb-2">Today's Intake Feed</Text>
+                {/* RENAMED WORDING */}
+                <Text className="text-indigo-400 font-black uppercase text-xs tracking-[0.3em] mb-2">Today’s Applications</Text>
                 <Metric className="text-white font-black text-7xl drop-shadow-[0_0_40px_rgba(99,102,241,0.3)]">{filteredCandidates.length}</Metric>
             </Card>
         </Grid>
 
-        {/* DATA TABLE - Balanced Sizes */}
+        {/* DATA TABLE */}
         <Card className="bg-slate-900/20 border-slate-800/40 ring-0 rounded-[2.5rem] overflow-hidden shadow-3xl">
           <div className="p-8 border-b border-slate-800/60 bg-slate-900/40 flex justify-between items-center">
             <Title className="text-white font-black tracking-tighter uppercase text-xl italic">Intelligence Stream — {selectedDate?.toLocaleDateString()}</Title>
@@ -118,6 +120,7 @@ export default function FinalRecruitAIHub() {
         </Card>
       </div>
 
+      {/* POPUP MODAL */}
       <Dialog open={isOpen} onClose={() => setIsOpen(false)} static={true}>
         <DialogPanel className="bg-[#020617] border border-slate-800 p-0 rounded-[3.5rem] max-w-5xl shadow-[0_0_150px_rgba(79,70,229,0.35)] overflow-hidden">
           <div className="bg-slate-900/60 p-10 border-b border-slate-800 flex justify-between items-center">
