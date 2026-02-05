@@ -6,16 +6,28 @@ body {
   color: #f8fafc;
 }
 
-/* Ensure the Modal and Charts are SOLID DARK */
-div[role="dialog"], 
-.tremor-base,
+/* --- THE SOLID CALENDAR FIX --- */
+
+/* 1. Target the invisible wrapper and force it to be solid */
 div[data-radix-popper-content-wrapper] {
-  background-color: #0f172a !important; 
   opacity: 1 !important;
-  border: 1px solid #1e293b !important;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8) !important;
   z-index: 9999 !important;
 }
 
-/* Fix for overlapping text */
-.relative { z-index: 10; }
+/* 2. Force the actual calendar box to be SOLID SLATE 900 */
+div[role="dialog"], 
+.tremor-base,
+div.absolute.z-10.mt-2 {
+  background-color: #0f172a !important; /* Solid Dark Blue */
+  background: #0f172a !important;      /* Double force */
+  opacity: 1 !important;               /* NO TRANSPARENCY */
+  border: 1px solid #334155 !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 1) !important; /* Heavy shadow */
+}
+
+/* 3. Make sure the buttons and days inside are not see-through */
+button[role="gridcell"], 
+div.flex.items-center.justify-between.p-4 {
+  background-color: #0f172a !important;
+  opacity: 1 !important;
+}
