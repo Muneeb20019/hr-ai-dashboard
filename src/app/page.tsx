@@ -48,16 +48,18 @@ export default function FinalRecruitAIHub() {
     <main className="p-4 md:p-10 bg-[#020617] min-h-screen text-slate-100 font-sans selection:bg-indigo-500/30 overflow-x-hidden">
       <div className="max-w-7xl mx-auto">
         
-        {/* HEADER SECTION */}
+        {/* HEADER SECTION - Cleaned up (No "Secure Filter" label) */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-8 border-b border-slate-800 pb-10">
             <div className="space-y-4">
                 <div className="bg-slate-900/90 p-2 rounded-2xl border border-slate-800 shadow-2xl inline-flex items-center gap-2">
-                    <DatePicker className="max-w-[160px] bg-slate-900 text-white border-none rounded-xl" value={selectedDate} onValueChange={setSelectedDate} />
-                    <div className="h-6 w-[1px] bg-slate-800 mx-1"></div>
-                    <Text className="text-[10px] text-slate-500 px-3 font-mono uppercase tracking-widest font-black">Secure Filter</Text>
+                    {/* The Calendar stands alone now for a cleaner look */}
+                    <DatePicker 
+                      className="max-w-[160px] bg-slate-900 text-white border-none rounded-xl font-bold" 
+                      value={selectedDate} 
+                      onValueChange={setSelectedDate} 
+                    />
                 </div>
                 <div>
-                    {/* BOLD TAGLINE */}
                     <Text className="text-indigo-400 font-black tracking-wide text-2xl mb-2 italic drop-shadow-md">
                         "AI-Driven Talent Insights for Smarter Decisions"
                     </Text>
@@ -67,16 +69,14 @@ export default function FinalRecruitAIHub() {
             <Badge color="indigo" className="animate-pulse border-indigo-500/30 px-6 py-2 font-black tracking-[0.2em] text-[10px] rounded-full bg-indigo-500/10">AI AGENT LIVE</Badge>
         </div>
 
-        {/* UPDATED METRICS GRID */}
+        {/* METRICS GRID */}
         <Grid numItemsLg={2} className="gap-8 mb-12">
             <Card className="bg-slate-900/40 border-slate-800/60 ring-0 backdrop-blur-xl p-8">
-                {/* RENAMED WORDING */}
                 <Text className="text-slate-500 font-black uppercase text-[10px] tracking-widest mb-1">Total Talent Pool</Text>
                 <Metric className="text-white font-black text-5xl">{allCandidates.length}</Metric>
                 <AreaChart className="h-24 mt-4 -mx-8 -mb-8" data={hasData ? allCandidates.map((c, i) => ({ i, s: c.score })) : [{i: 0, s: 0}, {i: 1, s: 0}]} index="i" categories={["s"]} colors={["indigo"]} showXAxis={false} showYAxis={false} showLegend={false} showGridLines={false} />
             </Card>
             <Card className="bg-slate-900/40 border-slate-800/60 ring-0 flex flex-col justify-center items-center py-8 text-center rounded-[2.5rem]">
-                {/* RENAMED WORDING */}
                 <Text className="text-indigo-400 font-black uppercase text-xs tracking-[0.3em] mb-2">Today’s Applications</Text>
                 <Metric className="text-white font-black text-7xl drop-shadow-[0_0_40px_rgba(99,102,241,0.3)]">{filteredCandidates.length}</Metric>
             </Card>
@@ -152,11 +152,11 @@ export default function FinalRecruitAIHub() {
                         <Title className="text-white text-[10px] uppercase tracking-[0.3em] font-black mb-6 border-b border-slate-800 pb-3 flex items-center italic"><Phone className="w-4 h-4 mr-2 text-indigo-500" /> Secure Contact Channels</Title>
                         <div className="space-y-6">
                             <div>
-                                <Text className="text-slate-600 text-[9px] font-black uppercase tracking-widest mb-1 leading-none">Authenticated Email Address</Text>
+                                <Text className="text-slate-600 text-[9px] font-black uppercase tracking-widest mb-1">Authenticated Email Address</Text>
                                 <Text className="text-indigo-400 text-xl font-black truncate leading-none underline decoration-indigo-500/20 underline-offset-8">{selectedCandidate?.email}</Text>
                             </div>
                             <div>
-                                <Text className="text-slate-600 text-[9px] font-black uppercase tracking-widest mb-1 leading-none">Direct Communication Line</Text>
+                                <Text className="text-slate-600 text-[9px] font-black uppercase tracking-widest mb-1">Direct Communication Line</Text>
                                 <Text className="text-emerald-400 text-xl font-black tracking-widest leading-none">{selectedCandidate?.phone || "NOT_PROVIDED"}</Text>
                             </div>
                         </div>
