@@ -9,7 +9,6 @@ import {
 } from "@tremor/react";
 import { Users, BarChart3, CheckCircle, Mail, Phone, ArrowRight, X, Zap } from "lucide-react";
 
-// YOUR CONNECTION KEYS
 const SUPABASE_URL = 'https://ugqqwlfrvczogkkxxoct.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVncXF3bGZydmN6b2dra3h4b2N0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxMDc5MzEsImV4cCI6MjA4NTY4MzkzMX0.BP_75CH7CII90lES8UP7reB70SgAGMEb1OFzFdKnJcg';
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -48,16 +47,14 @@ export default function FinalRecruitAIHub() {
     <main className="p-10 bg-[#020617] min-h-screen text-slate-100 font-sans selection:bg-indigo-500/30 overflow-x-hidden">
       <div className="max-w-[1600px] mx-auto">
         
-        {/* HEADER SECTION */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-10 border-b border-slate-800 pb-12">
             <div className="space-y-6">
                 <div className="bg-slate-900/90 p-3 rounded-2xl border border-slate-800 shadow-2xl inline-flex items-center gap-4">
                     <DatePicker className="max-w-[200px] bg-slate-900 text-white border-none rounded-xl text-lg font-bold" value={selectedDate} onValueChange={setSelectedDate} />
                     <div className="h-8 w-[1px] bg-slate-800 mx-2"></div>
-                    <Text className="text-xs text-slate-500 px-4 font-mono uppercase tracking-[0.2em] font-black border border-slate-800 rounded-lg py-1 uppercase tracking-tighter">Secure Link</Text>
+                    <Text className="text-xs text-slate-500 px-4 font-mono uppercase tracking-[0.2em] font-black border border-slate-800 rounded-lg py-1">Secure Link</Text>
                 </div>
                 <div>
-                    {/* --- HIGH VISIBILITY TAGLINE: Extra Bold & Large --- */}
                     <Text className="text-indigo-400 font-black tracking-tight text-3xl mb-4 uppercase italic leading-none drop-shadow-[0_2px_10px_rgba(99,102,241,0.4)]">
                         "AI-Driven Talent Insights for Smarter Decisions"
                     </Text>
@@ -71,7 +68,6 @@ export default function FinalRecruitAIHub() {
             </Badge>
         </div>
 
-        {/* METRICS GRID */}
         <Grid numItemsLg={2} className="gap-12 mb-16">
             <Card className="bg-slate-900/40 border-slate-800/60 ring-0 backdrop-blur-xl p-12 rounded-[3rem]">
                 <Text className="text-slate-500 font-black uppercase text-sm tracking-[0.4em] mb-4">Global Pipeline Volume</Text>
@@ -86,11 +82,10 @@ export default function FinalRecruitAIHub() {
             </Card>
         </Grid>
 
-        {/* DATA TABLE */}
         <Card className="bg-slate-900/20 border-slate-800/40 ring-0 rounded-[4rem] overflow-hidden shadow-3xl">
           <div className="p-12 border-b border-slate-800/60 bg-slate-900/40 flex justify-between items-center">
             <Title className="text-white font-black tracking-tighter uppercase text-4xl italic leading-none tracking-tight">Intelligence Stream — {selectedDate?.toLocaleDateString()}</Title>
-            <Badge color="slate" variant="light" className="font-mono text-xs px-6 py-2 rounded-full font-bold border border-slate-700 uppercase tracking-widest">{filteredCandidates.length} ENTRIES</Badge>
+            <Badge color="slate" className="font-mono text-xs px-6 py-2 rounded-full font-bold border border-slate-700 uppercase tracking-widest">{filteredCandidates.length} ENTRIES</Badge>
           </div>
           <Table>
             <TableHead className="bg-slate-900/80">
@@ -125,7 +120,6 @@ export default function FinalRecruitAIHub() {
         </Card>
       </div>
 
-      {/* MODAL / POPUP */}
       <Dialog open={isOpen} onClose={() => setIsOpen(false)} static={true}>
         <DialogPanel className="bg-[#020617] border border-slate-800 p-0 rounded-[4rem] max-w-5xl shadow-[0_0_200px_rgba(79,70,229,0.3)] overflow-hidden">
           <div className="bg-slate-900/60 p-12 border-b border-slate-800 flex justify-between items-center">
